@@ -43,4 +43,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function csvConversions()
+    {
+        return $this->hasMany(CsvConversion::class);
+    }
 }
