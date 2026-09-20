@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -40,6 +40,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'is_active' => 'required|boolean',
+            'is_admin' => 'boolean',
         ]);
 
         User::create([
@@ -47,10 +48,10 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'is_active' => $validated['is_active'],
+            'is_admin' => $validated['is_admin'] ?? false,
         ]);
 
-        return to_route('users')
-            ->with('success', 'User created successfully.');
+        return to_route('users')->with('success', 'User created successfully.');
     }
 
     public function show(User $user)
@@ -76,15 +77,15 @@ class UserController extends Controller
                 'string',
                 'email',
                 'max:255',
-                'unique:users,email,' . $user->id,
+                'unique:users,email,'.$user->id,
             ],
             'is_active' => 'required|boolean',
+            'is_admin' => 'boolean',
         ]);
 
         $user->update($validated);
 
-        return to_route('users')
-            ->with('success', 'User updated successfully.');
+        return to_route('users')->with('success', 'User updated successfully.');
     }
 
     public function destroy(User $user)

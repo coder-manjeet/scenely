@@ -39,13 +39,7 @@ type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+const homeHref = (isAdmin: boolean) => (isAdmin ? dashboard() : '/csv-conversions');
 
 const rightNavItems: NavItem[] = [
     {
@@ -68,6 +62,18 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
     const { auth } = page.props;
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
+
+    const mainNavItems: NavItem[] = [
+        ...(auth.user?.is_admin === true
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutGrid,
+                  },
+              ]
+            : []),
+    ];
 
     return (
         <>
@@ -135,7 +141,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                     </div>
 
                     <Link
-                        href={dashboard()}
+                        href={homeHref(auth.user?.is_admin === true)}
                         prefetch
                         className="flex items-center space-x-2"
                     >

@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, FileSpreadsheet, FolderGit2, LayoutGrid, UsersIcon } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -16,36 +16,49 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'CSV Conversions',
-        href: '/csv-conversions',
-        icon: FileSpreadsheet,
-    },
-    {
-        title: 'Users',
-        href: '/users',
-        icon: UsersIcon,
-    },
-];
-
 const footerNavItems: NavItem[] = [
 
 ];
 
+const homeHref = (isAdmin: boolean) => (isAdmin ? dashboard() : '/csv-conversions');
+
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const isAdmin = auth.user?.is_admin === true;
+
+    const mainNavItems: NavItem[] = [
+        ...(isAdmin
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutGrid,
+                  },
+              ]
+            : []),
+        {
+            title: 'CSV Conversions',
+            href: '/csv-conversions',
+            icon: FileSpreadsheet,
+        },
+        ...(isAdmin
+            ? [
+                  {
+                      title: 'Users',
+                      href: '/users',
+                      icon: UsersIcon,
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={homeHref(isAdmin)} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

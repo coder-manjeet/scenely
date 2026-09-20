@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Database\Factories\CsvConversionFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
+/** @use HasFactory<CsvConversionFactory> */
 class CsvConversion extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'original_filename',

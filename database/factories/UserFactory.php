@@ -31,7 +31,18 @@ class UserFactory extends Factory
             'is_active' => fake()->boolean(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'is_admin' => false,
         ];
+    }
+
+    /**
+     * Indicate that the model has administrator privileges.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_admin' => true,
+        ]);
     }
 
     /**
